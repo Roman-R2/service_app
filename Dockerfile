@@ -6,6 +6,10 @@ COPY pyproject.toml /temp/pyproject.toml
 
 WORKDIR /temp
 
+# install psycopg2 dependencies
+RUN apk update \
+    && apk add postgresql-client build-base postgresql-dev gcc python3-dev musl-dev
+
 # Install dependencies
 RUN pip install --upgrade pip
 RUN pip install poetry
