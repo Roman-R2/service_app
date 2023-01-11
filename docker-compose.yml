@@ -26,3 +26,8 @@ services:
       - POSTGRES_DB=dbname
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=pass
+    volumes:
+      - postgres-volume:/var/lib/postgresql/data/
+
+volumes:
+  postgres-volume:
