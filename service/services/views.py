@@ -15,9 +15,15 @@ class SubscriptionView(ReadOnlyModelViewSet):
 
     # Либо пишем при помощи класса, чтобы исключить ненужные поля в запросах (queryset в классе Prefetch)
     # Теперь не 3 а 2 запроса, пристствует INNER JOIN "auth_user"
+    # queryset = Subscription.objects.all().prefetch_related(
+    #     Prefetch('client', queryset=Client.objects.all()
+    #              .select_related('user').only('company_name', 'user__email'))
+    # )
+
+    # Теперь появился вложенный сериализатор
     queryset = Subscription.objects.all().prefetch_related(
+        'plan',
         Prefetch('client', queryset=Client.objects.all()
                  .select_related('user').only('company_name', 'user__email'))
     )
-
     serializer_class = SubscriptionSerializer
