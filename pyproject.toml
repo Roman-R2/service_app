@@ -12,6 +12,7 @@ django = "3.2.16"
 djangorestframework = "3.14.0"
 psycopg2-binary = "2.9.5"
 celery = {version = "5.2.7", extras = ["redis"]}
+flower = "1.2.0"
 
 
 [build-system]
