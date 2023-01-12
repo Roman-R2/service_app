@@ -7,6 +7,6 @@ def set_price(subscriprion_id):
 
     subscribtion = Subscription.objects.get(id=subscriprion_id)
     new_price = (subscribtion.service.full_price -
-                 subscribtion.service.full_price * subscribtion.paln.discount_percent / 100)
+                 subscribtion.service.full_price * subscribtion.plan.discount_percent / 100)
     subscribtion.price = new_price
-    subscribtion.save(save_model=False)
+    subscribtion.save()
