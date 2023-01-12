@@ -1,4 +1,4 @@
-from django.db.models import Prefetch, F
+from django.db.models import Prefetch, F, Sum
 from django.shortcuts import render
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
@@ -28,3 +28,18 @@ class SubscriptionView(ReadOnlyModelViewSet):
     ).annotate(price=F('service__full_price') -
                      F('service__full_price') * F('plan__discount_percent') / 100.00)
     serializer_class = SubscriptionSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        responce = super().list(request, *args, **kwargs)
+
+        # Подменяем данные
+        responce_data = {'result': responce.data}
+        # Агрегируем наше виртуальное поле price,
+        # которое мы создали в аннотациях и добавляем его в responce
+        # queryset.aggregate(total=Sum('price')) это словать в котором лежит total
+        responce_data['total_amount'] = queryset.aggregate(total=Sum('price')).get('total')
+        responce.data = responce_data
+
+        return responce
