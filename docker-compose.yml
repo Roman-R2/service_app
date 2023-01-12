@@ -4,8 +4,8 @@ services:
   web-app:
     build:
       context: ./
-#    container_name: web-app
-#    restart: always
+    #    container_name: web-app
+    #    restart: always
     ports:
       - "8000:8000"
     volumes:
@@ -28,6 +28,26 @@ services:
       - POSTGRES_PASSWORD=pass
     volumes:
       - postgres-volume:/var/lib/postgresql/data/
+
+  redis:
+    image: redis:7.0.5-alpine
+    hostname: redis
+
+  worker:
+    build:
+      context: ./
+    # По какому hostname внутри docker будет определяться сервис
+    hostname: worker
+    entrypoint: celery
+    # Файл celery_app в котором есть переменная app
+    # Пытаемся создать worker
+    command: -A celery_app.app worker --loglevel=info
+    volumes:
+      - ./service:/web-app/service
+    links:
+      - redis
+    depends_on:
+      - redis
 
 volumes:
   postgres-volume:

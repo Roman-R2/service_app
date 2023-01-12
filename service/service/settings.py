@@ -137,3 +137,8 @@ LOGGING = {
         }
     }
 }
+
+# Протокол redis, хостнайм берум из docker-compose.yml (redis)
+# 6379 - порт по умолчанию
+# 0 - база данных redis (или видимость)
+CELERY_BROKER_URL = 'redis://redis:6379/0'
