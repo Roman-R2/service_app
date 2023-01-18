@@ -2,7 +2,10 @@ from django.core.validators import MaxValueValidator
 from django.db import models
 
 # Продаем подписки на некоторые сервисы
+from django.db.models.signals import post_delete
+
 from clients.models import Client
+from services.reseivers import delete_cache_total_sum
 from services.tasks import set_price, set_comment
 
 
@@ -22,6 +25,7 @@ class Service(models.Model):
                 set_comment.delay(subscription.id)
 
         return super().save(*args, **kwargs)
+
 
 # Воображаемые тарифные планы
 class Plan(models.Model):
@@ -66,3 +70,14 @@ class Subscription(models.Model):
     #         set_price.delay(self.id)
     #
     #     return super().save(*args, **kwargs)
+
+    # Чтобы обновить цену подписки в таске при ее сохранении
+    def save(self, *args, **kwargs):
+        creating = not bool(self.id)
+        result = super().save(*args, **kwargs)
+        if creating:
+            set_price.delay(self.id)
+        return result
+
+
+post_delete.connect(delete_cache_total_sum, sender=Subscription)
