@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db.models import Prefetch, F, Sum
 from django.shortcuts import render
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -34,12 +35,21 @@ class SubscriptionView(ReadOnlyModelViewSet):
 
         responce = super().list(request, *args, **kwargs)
 
+        price_cache_name = 'price_cache'
+        price_cache = cache.get(price_cache_name)
+
+        if price_cache:
+            total_price = price_cache
+        else:
+            total_price = queryset.aggregate(total=Sum('price')).get('total')
+            cache.set(price_cache_name, total_price, 10)
+
         # Подменяем данные
         responce_data = {'result': responce.data}
         # Агрегируем наше виртуальное поле price,
         # которое мы создали в аннотациях и добавляем его в responce
         # queryset.aggregate(total=Sum('price')) это словать в котором лежит total
-        responce_data['total_amount'] = queryset.aggregate(total=Sum('price')).get('total')
+        responce_data['total_amount'] = total_price
         responce.data = responce_data
 
         return responce
