@@ -149,3 +149,5 @@ CACHES = {
         'LOCATION': 'redis://redis:6379/1',
     }
 }
+
+PRICE_CACHE_NAME = 'price_cache'
