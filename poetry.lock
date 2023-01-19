@@ -225,6 +225,21 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-cachalot"
+version = "2.5.2"
+description = "Caches your Django ORM queries and automatically invalidates them."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-cachalot-2.5.2.tar.gz", hash = "sha256:bf0420cb8fa5cb4ceebd373a069cf91bb7afb995850cc35e91ccdadfa6cc41b1"},
+    {file = "django_cachalot-2.5.2-py3-none-any.whl", hash = "sha256:7db091320ae352e9ad88c22336cff8d64fb928571287f1fae5299a187fc1a17e"},
+]
+
+[package.dependencies]
+Django = ">=2.2,<4.2"
+
+[[package]]
 name = "django-redis"
 version = "5.2.0"
 description = "Full featured redis cache backend for Django."
@@ -539,4 +554,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "26a4b7a409cd06ab48c2c8b7f64c72d9bc295fd432a9f7f16530bd83dc5c9d78"
+content-hash = "75109e8924d41d55aff08cfb6e44dfafb90153b1287c74d83b0c7601cd9103f8"
